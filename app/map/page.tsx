@@ -242,7 +242,7 @@ export default function GlobalMapPage() {
                               
                               const matchedKey = Object.keys(districtsData).find(k => 
                                 normalizedDistrictName === k.toLowerCase() || 
-                                rawAltNames.toLowerCase().split('|').some(alt => alt.trim().toLowerCase() === k.toLowerCase())
+                                rawAltNames.toLowerCase().split('|').some((alt: string) => alt.trim().toLowerCase() === k.toLowerCase())
                               );
                               const count = matchedKey ? districtsData[matchedKey] : 0;
                               
