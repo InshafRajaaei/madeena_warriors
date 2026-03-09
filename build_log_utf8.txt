@@ -1,0 +1,43 @@
+﻿
+> madeena_warriors@0.1.0 build
+> next build
+
+Ôû▓ Next.js 16.1.6 (Turbopack)
+
+node.exe : ÔÜá The "middleware" file convention is 
+deprecated. Please use "proxy" instead. Learn more: 
+https://nextjs.org/docs/messages/middleware-to-proxy
+At C:\Program Files\nodejs\npm.ps1:29 char:3
++   & $NODE_EXE $NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ÔÜá The "middle 
+   ...leware-to-proxy:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Creating an optimized production build ...
+Ô£ô Compiled successfully in 4.1s
+  Running TypeScript ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/7) ...
+Error occurred prerendering page "/admin". Read more: 
+https://nextjs.org/docs/messages/prerender-error
+Error: @supabase/ssr: Your project's URL and API key are 
+required to create a Supabase client!
+
+Check your Supabase project's API settings to find these 
+values
+
+https://supabase.com/dashboard/project/_/settings/api
+    at <unknown> 
+(https://supabase.com/dashboard/project/_/settings/api)
+    at <unknown> (C:\Inshaf\Madeena\madeena_warriors\.next\se
+rver\chunks\ssr\_02f7bd2b._.js:58:63)
+    at cs (C:\Inshaf\Madeena\madeena_warriors\.next\server\ch
+unks\ssr\_02f7bd2b._.js:62:4544)
+    at k (C:\Inshaf\Madeena\madeena_warriors\.next\server\chu
+nks\ssr\[root-of-the-server]__e0b72e59._.js:1:4802) {
+  digest: '3753328551'
+}
+Export encountered an error on /admin/page: /admin, exiting 
+the build.
+Ô¿» Next.js build worker exited with code: 1 and signal: null

@@ -1,26 +1,261 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-primary-navy: #0F1D5D;
+  --color-primary-orange: #EC7C08;
+  --color-school-gold: #D4AF37;
+  --color-school-red: #A3121E;
+  
+  --color-bg-dark: #050A1F;
+  --color-bg-card: rgba(15, 29, 93, 0.4);
+  
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #94A3B8;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-card: #FFFFFF;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  scroll-behavior: smooth;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-primary);
+  font-family: var(--font-outfit), system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ==========================================
+   BUTTONS
+   ========================================== */
+
+.btn-primary {
+  @apply bg-gradient-to-r from-primary-orange to-[#ff9933] text-white px-6 py-2 rounded-full font-bold shadow-[0_0_15px_rgba(236,124,8,0.4)] transition-all duration-300 hover:shadow-[0_0_25px_rgba(236,124,8,0.6)] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary-orange/50 cursor-pointer;
+}
+
+.btn-secondary {
+  @apply bg-white text-primary-navy px-6 py-2 rounded-full font-bold transition-all duration-300 hover:bg-gray-100 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] focus:outline-none focus:ring-2 focus:ring-white/50 hover:-translate-y-0.5 cursor-pointer;
+}
+
+.btn-outline {
+  @apply border-2 border-primary-orange text-primary-orange px-6 py-2 rounded-full font-bold transition-all duration-300 hover:bg-primary-orange hover:text-white hover:shadow-[0_0_15px_rgba(236,124,8,0.4)] focus:outline-none focus:ring-2 focus:ring-primary-orange/50 cursor-pointer;
+}
+
+.btn-ghost {
+  @apply text-gray-300 px-6 py-2 rounded-full font-medium transition-all duration-300 hover:bg-white/10 hover:text-white focus:outline-none cursor-pointer;
+}
+
+/* ==========================================
+   GLASS / CARD STYLES
+   ========================================== */
+
+.glass-panel {
+  @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-xl;
+}
+
+.glass-nav {
+  @apply bg-[#050A1F]/80 backdrop-blur-lg border-b border-white/10;
+}
+
+.card {
+  @apply bg-white/[0.04] backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden hover:border-primary-orange/30 hover:shadow-[0_8px_32px_rgba(236,124,8,0.1)] transition-all duration-500 relative;
+}
+
+.card-static {
+  @apply bg-white/[0.04] backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden transition-all duration-500 relative;
+}
+
+.container-app {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* ==========================================
+   FORM ELEMENTS
+   ========================================== */
+
+.input-field {
+  @apply w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-orange focus:border-transparent transition-all;
+}
+
+.label-field {
+  @apply block text-sm font-medium text-gray-300 mb-1.5;
+}
+
+/* ==========================================
+   TEXT UTILITIES
+   ========================================== */
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-orange to-school-gold;
+}
+
+.text-gradient-blue {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400;
+}
+
+/* ==========================================
+   SECTION UTILITIES
+   ========================================== */
+
+.section-heading {
+  @apply text-4xl md:text-5xl font-black text-white tracking-tight mb-4;
+}
+
+.section-subheading {
+  @apply text-lg md:text-xl text-gray-400 font-light leading-relaxed max-w-2xl mx-auto;
+}
+
+.divider-gradient {
+  @apply h-[2px] w-full bg-gradient-to-r from-transparent via-primary-orange to-transparent opacity-40;
+}
+
+.divider-line {
+  @apply w-24 h-1.5 bg-gradient-to-r from-primary-orange to-school-gold mx-auto rounded-full shadow-[0_0_15px_rgba(236,124,8,0.5)];
+}
+
+/* ==========================================
+   STAT COUNTER CARD
+   ========================================== */
+
+.stat-card {
+  @apply bg-white/[0.04] backdrop-blur-md border border-white/10 rounded-2xl p-6 text-center transition-all duration-500 hover:border-primary-orange/30 hover:shadow-[0_0_20px_rgba(236,124,8,0.1)];
+}
+
+/* ==========================================
+   BADGE
+   ========================================== */
+
+.badge {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-orange {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary-orange/10 text-primary-orange border border-primary-orange/20;
+}
+
+.badge-blue {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20;
+}
+
+.badge-green {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-500/10 text-green-400 border border-green-500/20;
+}
+
+.badge-red {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20;
+}
+
+/* ==========================================
+   ANIMATIONS
+   ========================================== */
+
+@keyframes float {
+  0% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-20px) scale(1.05); }
+  100% { transform: translateY(0px) scale(1); }
+}
+
+@keyframes float-slow {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(3deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+@keyframes slide-up {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  0% { opacity: 0; transform: translateX(40px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 8s ease-in-out infinite 2s;
+}
+
+.animate-float-slow {
+  animation: float-slow 10s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.8s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* ==========================================
+   SCROLLBAR
+   ========================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050A1F;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(236, 124, 8, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(236, 124, 8, 0.5);
+}
+
+/* ==========================================
+   LOADING SKELETON
+   ========================================== */
+
+.skeleton {
+  @apply bg-white/10 rounded-lg;
+  background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
 }
