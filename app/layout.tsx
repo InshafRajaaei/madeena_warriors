@@ -11,7 +11,33 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: "Madeena Warriors | Batch 2018",
-  description: "The digital archive and social network for the first O/L batch of KM Maruthamunai Al-Madeena Vidyalaya.",
+  description:
+    "Official website of Madeena Warriors 2018 — the first O/L batch of KM Maruthamunai Al-Madeena Vidyalaya, Ampara, Sri Lanka. Explore batch members, memories and global achievements.",
+  keywords: [
+    "Madeena Warriors",
+    "Madeena Warriors 2018",
+    "Maruthamunai batch",
+    "KM Maruthamunai Al-Madeena Vidyalaya",
+    "Al-Madeena Vidyalaya",
+    "Maruthamunai school",
+    "Ampara school batch",
+  ],
+  metadataBase: new URL("https://madeenawarriors2k18.vercel.app"),
+  openGraph: {
+    title: "Madeena Warriors | Batch 2018",
+    description:
+      "First O/L Batch of KM Maruthamunai Al-Madeena Vidyalaya — reconnecting the 2018 batch worldwide.",
+    url: "https://madeenawarriors2k18.vercel.app",
+    siteName: "Madeena Warriors",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Madeena Warriors | Batch 2018",
+    description:
+      "First O/L Batch of KM Maruthamunai Al-Madeena Vidyalaya — reconnecting the 2018 batch worldwide.",
+  },
 };
 
 export default function RootLayout({

@@ -80,7 +80,7 @@ export default function AboutPage() {
             <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary-orange via-blue-500 to-purple-500 md:-translate-x-px" />
 
             {[
-              { year: '2013', title: 'The Beginning', description: 'We entered Al-Madeena Vidyalaya as young students, starting a journey that would shape our futures. Fresh faces, new friendships, and endless possibilities.', icon: Star, color: 'orange' },
+              { year: '2009', title: 'The Beginning', description: 'We entered Al-Madeena Vidyalaya as young students, starting a journey that would shape our futures. Fresh faces, new friendships, and endless possibilities.', icon: Star, color: 'orange' },
               { year: '2018', title: 'O/L Examination', description: 'The defining moment — our batch sat for the O/L examination together. Years of hard work culminated in this milestone that marked the transition from school to the wider world.', icon: Trophy, color: 'blue' },
               { year: '2019', title: 'Paths Diverge', description: 'Some continued to A/Levels, others pursued vocational training, and many began their professional journeys. The batch scattered but the bond stayed strong.', icon: Users, color: 'purple' },
               { year: 'Today', title: 'Warriors Worldwide', description: 'From local businesses to international careers, the Madeena Warriors are making their mark across the globe. This platform reconnects us and celebrates every journey.', icon: Heart, color: 'red' }

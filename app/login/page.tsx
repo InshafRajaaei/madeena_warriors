@@ -133,10 +133,10 @@ export default function LoginPage() {
                 <div>
                   <label className="label-field" htmlFor="firstName">First Name</label>
                   <div className="relative">
-                    <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                    <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
                     <input
                       id="firstName"
-                      className="input-field pl-11"
+                      className="input-field !pl-10"
                       type="text"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
@@ -148,10 +148,10 @@ export default function LoginPage() {
                 <div>
                   <label className="label-field" htmlFor="lastName">Last Name</label>
                   <div className="relative">
-                    <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                    <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
                     <input
                       id="lastName"
-                      className="input-field pl-11"
+                      className="input-field !pl-10"
                       type="text"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
@@ -166,10 +166,10 @@ export default function LoginPage() {
             <div>
               <label className="label-field" htmlFor="email">Email Address</label>
               <div className="relative">
-                <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
                 <input
                   id="email"
-                  className="input-field pl-11"
+                  className="input-field !pl-10"
                   type="email"
                   required
                   value={email}
@@ -183,10 +183,10 @@ export default function LoginPage() {
             <div>
               <label className="label-field" htmlFor="password">Password</label>
               <div className="relative">
-                <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
                 <input
                   id="password"
-                  className="input-field pl-11"
+                  className="input-field !pl-10"
                   type="password"
                   required
                   value={password}

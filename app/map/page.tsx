@@ -41,16 +41,17 @@ export default function GlobalMapPage() {
             let city = profile.current_city.trim().toLowerCase()
             let district = city;
             if (city.includes('colombo') || city.includes('dehiwala') || city.includes('mount') || city.includes('moratuwa')) district = 'Colombo';
-            if (city.includes('kandy') || city.includes('peradeniya')) district = 'Kandy';
-            if (city.includes('ampara') || city.includes('maruthamunai') || city.includes('kalmunai') || city.includes('sainthamaruthu') || city.includes('samanthurai') || city.includes('nintavur') || city.includes('akkaraipattu') || city.includes('pottuvil') || city.includes('addalaichenai')) district = 'Ampara';
-            if (city.includes('galle')) district = 'Galle';
-            if (city.includes('matara')) district = 'Matara';
-            if (city.includes('batticaloa') || city.includes('kattankudy') || city.includes('eravur')) district = 'Batticaloa';
-            if (city.includes('trincomalee') || city.includes('kinniya') || city.includes('mutur')) district = 'Trincomalee';
-            if (city.includes('kurunegala')) district = 'Kurunegala';
-            if (city.includes('puttalam')) district = 'Puttalam';
-            if (city.includes('badulla')) district = 'Badulla';
-            if (city.includes('gampaha') || city.includes('negombo')) district = 'Gampaha';
+            else if (city.includes('kandy') || city.includes('peradeniya')) district = 'Kandy';
+            else if (city.includes('ampara') || city.includes('maruthamunai') || city.includes('kalmunai') || city.includes('sainthamaruthu') || city.includes('samanthurai') || city.includes('nintavur') || city.includes('akkaraipattu') || city.includes('pottuvil') || city.includes('addalaichenai')) district = 'Ampara';
+            else if (city.includes('kegalle')) district = 'Kegalle';
+            else if (city.includes('galle')) district = 'Galle';
+            else if (city.includes('matara')) district = 'Matara';
+            else if (city.includes('batticaloa') || city.includes('kattankudy') || city.includes('eravur')) district = 'Batticaloa';
+            else if (city.includes('trincomalee') || city.includes('kinniya') || city.includes('mutur')) district = 'Trincomalee';
+            else if (city.includes('kurunegala')) district = 'Kurunegala';
+            else if (city.includes('puttalam')) district = 'Puttalam';
+            else if (city.includes('badulla')) district = 'Badulla';
+            else if (city.includes('gampaha') || city.includes('negombo')) district = 'Gampaha';
             districtCounts[district] = (districtCounts[district] || 0) + 1;
           }
         })
@@ -240,9 +241,8 @@ export default function GlobalMapPage() {
                               const normalizedDistrictName = districtName.toLowerCase().replace(' district', '');
                               
                               const matchedKey = Object.keys(districtsData).find(k => 
-                                normalizedDistrictName.includes(k.toLowerCase()) || 
-                                k.toLowerCase().includes(normalizedDistrictName) ||
-                                rawAltNames.toLowerCase().includes(k.toLowerCase())
+                                normalizedDistrictName === k.toLowerCase() || 
+                                rawAltNames.toLowerCase().split('|').some(alt => alt.trim().toLowerCase() === k.toLowerCase())
                               );
                               const count = matchedKey ? districtsData[matchedKey] : 0;
                               

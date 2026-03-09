@@ -4,7 +4,7 @@ import { Users, BookOpen, MapPin, ShieldCheck, GraduationCap, Camera, Calendar, 
 
 export default function Home() {
   const timelineEvents = [
-    { year: "2013", title: "The Beginning", desc: "KM Maruthamunai Al-Madeena Vidyalaya was established — a new chapter for education in the community." },
+    { year: "2009", title: "The Beginning", desc: "KM Maruthamunai Al-Madeena Vidyalaya was established — a new chapter for education in the community." },
     { year: "2018", title: "First O/L Batch", desc: "The Madeena Warriors made history as the very first batch to sit the O/L examinations." },
     { year: "2019+", title: "Diverse Paths", desc: "Members spread across the globe — pursuing higher education, careers, and entrepreneurship." },
     { year: "Today", title: "United Again", desc: "This platform brings the batch back together — preserving our legacy and celebrating every journey." },
@@ -149,11 +149,13 @@ export default function Home() {
             {[
               { value: "2018", label: "O/L Batch Year", icon: Calendar },
               { value: "1st", label: "Batch in History", icon: GraduationCap },
-              { value: "🌍", label: "Members Worldwide", icon: Globe },
+              { value: null, label: "Members Worldwide", icon: Globe },
               { value: "∞", label: "Memories Shared", icon: Camera },
             ].map((stat, i) => (
               <div key={i} className="stat-card group hover:-translate-y-1">
-                <div className="text-4xl md:text-5xl font-black text-gradient mb-2">{stat.value}</div>
+                <div className="text-4xl md:text-5xl font-black text-gradient mb-2">
+                  {stat.value ?? <stat.icon size={48} className="text-primary-orange mx-auto" />}
+                </div>
                 <p className="text-gray-400 text-sm font-medium">{stat.label}</p>
               </div>
             ))}

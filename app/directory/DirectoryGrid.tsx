@@ -73,11 +73,11 @@ export default function DirectoryGrid({ profiles }: { profiles: Profile[] }) {
         <div className="flex flex-col md:flex-row gap-4">
           {/* Search */}
           <div className="flex-1 relative">
-            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
             <input
               type="text"
               placeholder="Search by name, profession, country..."
-              className="input-field pl-12 pr-10"
+              className="input-field !pl-11 pr-10"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
