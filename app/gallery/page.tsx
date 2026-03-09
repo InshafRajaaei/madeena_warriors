@@ -15,6 +15,7 @@ interface GalleryPhoto {
   caption: string | null
   category: string
   created_at: string
+  is_approved: boolean
 }
 
 export default function GalleryPage() {
@@ -57,10 +58,12 @@ export default function GalleryPage() {
   useEffect(() => {
     async function fetchPhotos() {
       setLoading(true)
-      const { data, error } = await supabase
+      const query = supabase
         .from('gallery_photos')
         .select('*')
         .order('created_at', { ascending: false })
+
+      const { data, error } = await query
 
       if (data && !error) {
         setPhotos(data)
@@ -70,10 +73,11 @@ export default function GalleryPage() {
     fetchPhotos()
   }, [supabase])
 
-  // Filtered photos
+  // Filtered photos — non-admins only see approved photos
+  const visiblePhotos = isAdmin ? photos : photos.filter(p => p.is_approved !== false)
   const filteredPhotos = activeCategory === "All" 
-    ? photos 
-    : photos.filter(p => p.category === activeCategory)
+    ? visiblePhotos 
+    : visiblePhotos.filter(p => p.category === activeCategory)
 
   // Constants
   const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10 MB
@@ -136,6 +140,7 @@ export default function GalleryPage() {
       setUploadPreview(null)
       setUploadCaption("")
       setUploadCategory("General")
+      alert('Photo uploaded! It will appear in the gallery once approved by an admin.')
     } catch (err: any) {
       alert("Upload failed: " + err.message)
     } finally {
@@ -275,6 +280,11 @@ export default function GalleryPage() {
                     onClick={() => setLightboxIndex(i)}
                   >
                     <div className="relative w-full">
+                      {isAdmin && photo.is_approved === false && (
+                        <div className="absolute top-2 left-2 z-10 px-2 py-1 bg-yellow-500/90 text-black text-xs font-bold rounded-md">
+                          Pending
+                        </div>
+                      )}
                       <Image
                         src={photo.image_url}
                         alt={photo.caption || "Gallery photo"}

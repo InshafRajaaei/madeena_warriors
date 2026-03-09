@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import AvatarUpload from '@/components/profile/AvatarUpload'
-import { Eye, Save, Briefcase, GraduationCap, MapPin, Mail, Linkedin, Globe, Clock, AlertCircle, CheckCircle2, User } from 'lucide-react'
+import { Eye, Save, Briefcase, GraduationCap, MapPin, Mail, Linkedin, Globe, Clock, AlertCircle, CheckCircle2, User, Shield } from 'lucide-react'
 
 export default function DashboardPage() {
   const supabase = createClient()
@@ -28,6 +28,9 @@ export default function DashboardPage() {
   const [emailLink, setEmailLink] = useState('')
   const [linkedinLink, setLinkedinLink] = useState('')
   const [websiteLink, setWebsiteLink] = useState('')
+  const [hideLocation, setHideLocation] = useState(false)
+  const [hideContact, setHideContact] = useState(false)
+  const [hideEducation, setHideEducation] = useState(false)
 
   useEffect(() => {
     async function loadProfile() {
@@ -56,6 +59,9 @@ export default function DashboardPage() {
         setEmailLink(data.contact_links?.email || '')
         setLinkedinLink(data.contact_links?.linkedin || '')
         setWebsiteLink(data.contact_links?.website || '')
+        setHideLocation(data.privacy?.hide_location || false)
+        setHideContact(data.privacy?.hide_contact || false)
+        setHideEducation(data.privacy?.hide_education || false)
       }
       
       setLoading(false)
@@ -87,6 +93,11 @@ export default function DashboardPage() {
         email: emailLink,
         linkedin: linkedinLink,
         website: websiteLink
+      },
+      privacy: {
+        hide_location: hideLocation,
+        hide_contact: hideContact,
+        hide_education: hideEducation,
       },
       updated_at: new Date()
     }
@@ -146,6 +157,32 @@ export default function DashboardPage() {
           </Link>
         )}
       </div>
+
+      {/* Profile Completeness */}
+      {(() => {
+        const fields = [avatarUrl, jobTitle, education, currentCountry, currentCity, emailLink || linkedinLink || websiteLink]
+        const filled = fields.filter(Boolean).length
+        const percent = Math.round((filled / fields.length) * 100)
+        return (
+          <div className="card-static p-5 mb-8">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-bold text-white">Profile Completion</h3>
+              <span className={`text-sm font-black ${percent === 100 ? 'text-green-400' : 'text-primary-orange'}`}>{percent}%</span>
+            </div>
+            <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${percent === 100 ? 'bg-green-500' : 'bg-gradient-to-r from-primary-orange to-yellow-500'}`}
+                style={{ width: `${percent}%` }}
+              />
+            </div>
+            {percent < 100 && (
+              <p className="text-xs text-gray-600 mt-2">
+                Complete your {!avatarUrl ? 'photo, ' : ''}{!jobTitle ? 'job title, ' : ''}{!education ? 'education, ' : ''}{!currentCountry ? 'country, ' : ''}{!currentCity ? 'city, ' : ''}{!(emailLink || linkedinLink || websiteLink) ? 'contact links' : ''}
+              </p>
+            )}
+          </div>
+        )
+      })()}
 
       <div className="max-w-3xl mx-auto">
         <div className="card-static p-6 md:p-10">
@@ -264,6 +301,49 @@ export default function DashboardPage() {
                   </label>
                   <input id="websiteLink" type="url" className="input-field" value={websiteLink} onChange={(e) => setWebsiteLink(e.target.value)} placeholder="https://yourwebsite.com" />
                 </div>
+              </div>
+            </div>
+
+            {/* Privacy Controls */}
+            <div className="border-t border-white/10 pt-8">
+              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                  <Shield size={16} className="text-purple-400" />
+                </span>
+                Privacy Controls
+              </h3>
+              <p className="text-sm text-gray-500 mb-5">Choose what information is visible on your public profile.</p>
+              <div className="space-y-4">
+                <label className="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/5 cursor-pointer hover:border-white/10 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <MapPin size={16} className="text-green-400" />
+                    <div>
+                      <span className="text-sm font-medium text-white">Hide Location</span>
+                      <p className="text-xs text-gray-600">Country and city won&apos;t appear on your profile</p>
+                    </div>
+                  </div>
+                  <input type="checkbox" checked={hideLocation} onChange={(e) => setHideLocation(e.target.checked)} className="w-5 h-5 rounded accent-primary-orange cursor-pointer" />
+                </label>
+                <label className="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/5 cursor-pointer hover:border-white/10 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <Mail size={16} className="text-blue-400" />
+                    <div>
+                      <span className="text-sm font-medium text-white">Hide Contact Links</span>
+                      <p className="text-xs text-gray-600">Email, LinkedIn, and website won&apos;t be shown</p>
+                    </div>
+                  </div>
+                  <input type="checkbox" checked={hideContact} onChange={(e) => setHideContact(e.target.checked)} className="w-5 h-5 rounded accent-primary-orange cursor-pointer" />
+                </label>
+                <label className="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/5 cursor-pointer hover:border-white/10 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <GraduationCap size={16} className="text-yellow-400" />
+                    <div>
+                      <span className="text-sm font-medium text-white">Hide Education</span>
+                      <p className="text-xs text-gray-600">Education details won&apos;t appear publicly</p>
+                    </div>
+                  </div>
+                  <input type="checkbox" checked={hideEducation} onChange={(e) => setHideEducation(e.target.checked)} className="w-5 h-5 rounded accent-primary-orange cursor-pointer" />
+                </label>
               </div>
             </div>
 

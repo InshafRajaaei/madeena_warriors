@@ -1,4 +1,4 @@
-import { GraduationCap, Heart, MapPin, Users, Calendar, Star, BookOpen, Trophy } from 'lucide-react'
+import { GraduationCap, Heart, MapPin, Users, Calendar, Star, BookOpen, Trophy, CandlestickChart } from 'lucide-react'
 
 export default function AboutPage() {
   return (
@@ -146,6 +146,30 @@ export default function AboutPage() {
 
       {/* Values */}
       <section className="pb-24 relative z-10">
+
+        {/* In Memoriam */}
+        <div className="container-app mb-24">
+          <div className="card-static p-8 md:p-12 max-w-3xl mx-auto relative overflow-hidden border-white/10">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-gray-600 via-white/30 to-gray-600" />
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
+                <CandlestickChart size={28} className="text-white/40" />
+              </div>
+              <p className="text-xs uppercase tracking-[0.3em] text-gray-500 font-semibold mb-3">In Memoriam</p>
+              <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-4">
+                Forever in Our Hearts
+              </h2>
+              <div className="divider-line mb-6" />
+              <p className="text-gray-400 leading-relaxed max-w-xl mx-auto mb-6">
+                Some warriors left us too soon, but their memory lives on through this batch forever. 
+                They walked these halls with us, shared the same classrooms, and remain a part of our story.
+              </p>
+              <p className="text-gray-500 text-sm italic">
+                &ldquo;Gone from our sight, but never from our hearts.&rdquo;
+              </p>
+            </div>
+          </div>
+        </div>
         <div className="container-app">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-extrabold text-white">

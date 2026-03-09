@@ -27,6 +27,11 @@ export default async function ProfilePage({ params }: { params: { id: string } }
     isAdmin = adminCheck?.is_admin || false
   }
 
+  const privacy = profile.privacy || {}
+  const showLocation = isOwner || !privacy.hide_location
+  const showContact = isOwner || !privacy.hide_contact
+  const showEducation = isOwner || !privacy.hide_education
+
   if (!profile.is_approved && !isOwner && !isAdmin) {
     return (
       <div className="container-app py-20 flex flex-col items-center justify-center text-center">
@@ -41,7 +46,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
     )
   }
 
-  const hasContactLinks = profile.contact_links?.email || profile.contact_links?.linkedin || profile.contact_links?.website
+  const hasContactLinks = showContact && (profile.contact_links?.email || profile.contact_links?.linkedin || profile.contact_links?.website)
 
   return (
     <div className="container-app py-10 md:py-16">
@@ -106,7 +111,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
 
                 {/* Info Cards */}
                 <div className="space-y-4 mt-6">
-                  {profile.current_country && (
+                  {showLocation && profile.current_country && (
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400 flex-shrink-0 border border-green-500/20">
                         <MapPin size={18} />
@@ -120,7 +125,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
                     </div>
                   )}
 
-                  {profile.education && (
+                  {showEducation && profile.education && (
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 flex-shrink-0 border border-blue-500/20">
                         <GraduationCap size={18} />
