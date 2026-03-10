@@ -169,7 +169,7 @@ export default function AboutPage() {
               {/* Memorial Photos */}
               <div className="flex flex-wrap justify-center gap-6 mb-8">
                 {[
-                  { name: 'Mohamed Jarath', photo: '/memorial/Mohamed%20Jarath.jpg' },
+                  { name: 'Mohamed Jarath', photo: '/memorial/Mohamed-Jarath.jpg' },
                   // Add more friends here: { name: 'Name', photo: '/memorial/name.jpg' },
                 ].map((friend, i) => (
                   <div key={friend.name} className="flex flex-col items-center gap-2">
