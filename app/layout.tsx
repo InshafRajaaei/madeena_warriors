@@ -55,6 +55,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Madeena Warriors",
+              alternateName: "Madeena Warriors 2018",
+              url: "https://madeenawarriors2k18.vercel.app",
+            }),
+          }}
+        />
+      </head>
       <body className={`${outfit.variable} antialiased flex flex-col min-h-screen`}>
         <Header />
         <main className="flex-grow">

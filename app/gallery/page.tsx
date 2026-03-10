@@ -39,8 +39,9 @@ interface GalleryPhoto {
 }
 
 /* ─── Constants ─── */
-const CATEGORIES = ["All", "School Days", "Sports & Events", "Farewell 2018", "Reunions", "Achievements", "Campus Life", "General"]
-const YEARS = [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018]
+const DEFAULT_CATEGORIES = ["School Days", "Sports & Events", "Farewell 2018", "Reunions", "Achievements", "Campus Life", "General"]
+const CURRENT_YEAR = new Date().getFullYear()
+const YEARS = Array.from({ length: CURRENT_YEAR + 1 - 2009 + 1 }, (_, i) => 2009 + i)
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024 // 10MB
 const MAX_VIDEO_SIZE = 100 * 1024 * 1024 // 100MB
 const MAX_BATCH_FILES = 50
@@ -67,6 +68,7 @@ export default function GalleryPage() {
   /* ─── State ─── */
   const [photos, setPhotos] = useState<GalleryPhoto[]>([])
   const [albums, setAlbums] = useState<GalleryAlbum[]>([])
+  const [categories, setCategories] = useState<string[]>(DEFAULT_CATEGORIES)
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
   const [isAdmin, setIsAdmin] = useState(false)
@@ -116,7 +118,7 @@ export default function GalleryPage() {
     async function fetchData() {
       setLoading(true)
 
-      const [photosRes, albumsRes] = await Promise.all([
+      const [photosRes, albumsRes, categoriesRes] = await Promise.all([
         supabase
           .from('gallery_photos')
           .select('*')
@@ -124,10 +126,17 @@ export default function GalleryPage() {
         supabase
           .from('gallery_albums')
           .select('*')
-          .order('year', { ascending: true })
+          .order('year', { ascending: true }),
+        supabase
+          .from('gallery_categories')
+          .select('name')
+          .order('sort_order', { ascending: true })
       ])
 
       if (photosRes.data) setPhotos(photosRes.data)
+      if (categoriesRes.data && categoriesRes.data.length > 0) {
+        setCategories(categoriesRes.data.map((c: { name: string }) => c.name))
+      }
       if (albumsRes.data && !albumsRes.error) {
         const albumsWithCounts = albumsRes.data.map((album: GalleryAlbum) => {
           const albumPhotos = (photosRes.data || []).filter((p: GalleryPhoto) => p.album_id === album.id && p.is_approved)
@@ -395,7 +404,7 @@ export default function GalleryPage() {
           <h1 className="section-heading">
             Our Journey — <span className="text-gradient">Madeena Warriors</span>
           </h1>
-          <p className="text-sm text-gray-500 font-semibold tracking-widest uppercase mt-2">2009 — 2018</p>
+          <p className="text-sm text-gray-500 font-semibold tracking-widest uppercase mt-2">2009 — Present</p>
           <div className="divider-line mt-5 mb-6" />
           <p className="section-subheading">
             Not just photos — these are the stories, memories, and moments that shaped our batch.
@@ -507,7 +516,7 @@ export default function GalleryPage() {
               <div>
                 <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">Category</p>
                 <div className="flex flex-wrap gap-2">
-                  {CATEGORIES.map(cat => (
+                  {['All', ...categories].map(cat => (
                     <button
                       key={cat}
                       onClick={() => setActiveCategory(cat)}
@@ -912,7 +921,7 @@ export default function GalleryPage() {
                 onChange={e => setUploadCategory(e.target.value)}
                 className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-primary-orange/50 transition-colors cursor-pointer appearance-none"
               >
-                {CATEGORIES.filter(c => c !== "All").map(cat => (
+                {categories.map(cat => (
                   <option key={cat} value={cat} className="bg-[#0c1230]">{cat}</option>
                 ))}
               </select>

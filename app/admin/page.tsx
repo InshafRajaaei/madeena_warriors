@@ -3,19 +3,24 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Check, Trash2, ShieldAlert, Clock, UserCheck, Users, Camera, ImageIcon, FolderOpen, Plus, Star } from 'lucide-react'
+import { Check, Trash2, ShieldAlert, Clock, UserCheck, Users, Camera, ImageIcon, FolderOpen, Plus, Star, Tag, Edit3 } from 'lucide-react'
 import Image from 'next/image'
 
 export default function AdminPage() {
   const supabase = createClient()
   const router = useRouter()
   
+  const CURRENT_YEAR = new Date().getFullYear()
+  const YEARS = Array.from({ length: CURRENT_YEAR + 1 - 2009 + 1 }, (_, i) => 2009 + i)
+
   const [isAdmin, setIsAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
   const [pendingProfiles, setPendingProfiles] = useState<any[]>([])
   const [approvedCount, setApprovedCount] = useState(0)
   const [pendingPhotos, setPendingPhotos] = useState<any[]>([])
   const [albums, setAlbums] = useState<any[]>([])
+  const [allPhotos, setAllPhotos] = useState<any[]>([])
+  const [categories, setCategories] = useState<string[]>([])
   const [showCreateAlbum, setShowCreateAlbum] = useState(false)
   const [albumTitle, setAlbumTitle] = useState('')
   const [albumDescription, setAlbumDescription] = useState('')
@@ -23,6 +28,12 @@ export default function AdminPage() {
   const [albumCategory, setAlbumCategory] = useState('General')
   const [albumFeatured, setAlbumFeatured] = useState(false)
   const [creatingAlbum, setCreatingAlbum] = useState(false)
+  // Category management
+  const [newCategoryName, setNewCategoryName] = useState('')
+  const [addingCategory, setAddingCategory] = useState(false)
+  // Album photo management
+  const [managingAlbumId, setManagingAlbumId] = useState<string | null>(null)
+  const [settingCoverId, setSettingCoverId] = useState<string | null>(null)
 
   useEffect(() => {
     async function checkAdminAndLoad() {
@@ -70,6 +81,15 @@ export default function AdminPage() {
       
       if (pendingGallery) setPendingPhotos(pendingGallery)
 
+      // Fetch all approved photos (for album assignment)
+      const { data: approvedPhotos } = await supabase
+        .from('gallery_photos')
+        .select('*')
+        .eq('is_approved', true)
+        .order('created_at', { ascending: false })
+      
+      if (approvedPhotos) setAllPhotos(approvedPhotos)
+
       // Fetch albums
       const { data: albumsData } = await supabase
         .from('gallery_albums')
@@ -77,6 +97,18 @@ export default function AdminPage() {
         .order('year', { ascending: false })
       
       if (albumsData) setAlbums(albumsData)
+
+      // Fetch categories
+      const { data: categoriesData } = await supabase
+        .from('gallery_categories')
+        .select('*')
+        .order('sort_order', { ascending: true })
+      
+      if (categoriesData && categoriesData.length > 0) {
+        setCategories(categoriesData.map((c: any) => c.name))
+      } else {
+        setCategories(['School Days', 'Sports & Events', 'Farewell 2018', 'Reunions', 'Achievements', 'Campus Life', 'General'])
+      }
       
       setLoading(false)
     }
@@ -147,6 +179,72 @@ export default function AdminPage() {
       setPendingPhotos(pendingPhotos.filter(p => p.id !== id))
     } else {
       alert("Failed to delete photo: " + error.message)
+    }
+  }
+
+  // Category management
+  const handleAddCategory = async () => {
+    const name = newCategoryName.trim()
+    if (!name) return
+    if (categories.includes(name)) {
+      alert('This category already exists.')
+      return
+    }
+    setAddingCategory(true)
+    const { error } = await supabase
+      .from('gallery_categories')
+      .insert({ name, sort_order: categories.length + 1 })
+    if (!error) {
+      setCategories(prev => [...prev, name])
+      setNewCategoryName('')
+    } else {
+      alert('Failed to add category: ' + error.message)
+    }
+    setAddingCategory(false)
+  }
+
+  const handleDeleteCategory = async (name: string) => {
+    if (!window.confirm(`Delete category "${name}"? Photos using this category won't be deleted.`)) return
+    const { error } = await supabase
+      .from('gallery_categories')
+      .delete()
+      .eq('name', name)
+    if (!error) {
+      setCategories(prev => prev.filter(c => c !== name))
+    } else {
+      alert('Failed to delete: ' + error.message)
+    }
+  }
+
+  // Assign photo to album
+  const handleAssignToAlbum = async (photoId: string, albumId: string | null) => {
+    const { error } = await supabase
+      .from('gallery_photos')
+      .update({ album_id: albumId })
+      .eq('id', photoId)
+    if (!error) {
+      setAllPhotos(prev => prev.map(p => p.id === photoId ? { ...p, album_id: albumId } : p))
+    } else {
+      alert('Failed to update: ' + error.message)
+    }
+  }
+
+  // Remove photo from album
+  const handleRemoveFromAlbum = async (photoId: string) => {
+    await handleAssignToAlbum(photoId, null)
+  }
+
+  // Set album cover photo
+  const handleSetCoverPhoto = async (albumId: string, imageUrl: string) => {
+    const { error } = await supabase
+      .from('gallery_albums')
+      .update({ cover_image_url: imageUrl })
+      .eq('id', albumId)
+    if (!error) {
+      setAlbums(prev => prev.map(a => a.id === albumId ? { ...a, cover_image_url: imageUrl } : a))
+      setSettingCoverId(null)
+    } else {
+      alert('Failed to set cover: ' + error.message)
     }
   }
 
@@ -331,6 +429,51 @@ export default function AdminPage() {
           </div>
         </div>
       </section>
+      {/* Category Management */}
+      <section className="pb-20 relative z-10">
+        <div className="container-app">
+          <div className="card-static p-6 md:p-8">
+            <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+              <Tag size={18} className="text-blue-400" />
+              Category Management
+            </h2>
+
+            <div className="flex flex-wrap gap-2 mb-4">
+              {categories.map(cat => (
+                <div key={cat} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-gray-300">
+                  {cat}
+                  <button
+                    onClick={() => handleDeleteCategory(cat)}
+                    className="ml-1 text-gray-600 hover:text-red-400 transition-colors cursor-pointer"
+                    title="Delete category"
+                  >
+                    <Trash2 size={12} />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={newCategoryName}
+                onChange={e => setNewCategoryName(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleAddCategory()}
+                placeholder="New category name..."
+                className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-gray-600 outline-none focus:border-blue-500/50 transition-colors"
+              />
+              <button
+                onClick={handleAddCategory}
+                disabled={!newCategoryName.trim() || addingCategory}
+                className="px-4 py-2 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 rounded-lg font-medium text-sm transition-colors cursor-pointer border border-blue-500/20 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
+              >
+                <Plus size={14} /> Add
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Album Management */}
       <section className="pb-20 relative z-10">
         <div className="container-app">
@@ -376,7 +519,7 @@ export default function AdminPage() {
                         onChange={e => setAlbumYear(Number(e.target.value))}
                         className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm outline-none focus:border-primary-orange/50 transition-colors cursor-pointer appearance-none"
                       >
-                        {[2009,2010,2011,2012,2013,2014,2015,2016,2017,2018].map(y => (
+                        {YEARS.map(y => (
                           <option key={y} value={y} className="bg-[#0c1230]">{y}</option>
                         ))}
                       </select>
@@ -388,7 +531,7 @@ export default function AdminPage() {
                         onChange={e => setAlbumCategory(e.target.value)}
                         className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm outline-none focus:border-primary-orange/50 transition-colors cursor-pointer appearance-none"
                       >
-                        {['School Days', 'Sports & Events', 'Farewell 2018', 'Reunions', 'Achievements', 'Campus Life', 'General'].map(cat => (
+                        {categories.map(cat => (
                           <option key={cat} value={cat} className="bg-[#0c1230]">{cat}</option>
                         ))}
                       </select>
@@ -468,37 +611,160 @@ export default function AdminPage() {
               </div>
             ) : (
               <div className="space-y-3">
-                {albums.map(album => (
-                  <div key={album.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/5 hover:border-white/10 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-primary-orange/10 flex items-center justify-center shrink-0">
-                        <FolderOpen size={18} className="text-primary-orange" />
+                {albums.map(album => {
+                  const albumPhotos = allPhotos.filter(p => p.album_id === album.id)
+                  const unassignedPhotos = allPhotos.filter(p => !p.album_id)
+                  const isManaging = managingAlbumId === album.id
+                  const isSettingCover = settingCoverId === album.id
+                  
+                  return (
+                    <div key={album.id} className="rounded-xl bg-white/[0.03] border border-white/5 hover:border-white/10 transition-colors overflow-hidden">
+                      {/* Album header */}
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4">
+                        <div className="flex items-center gap-3">
+                          {/* Cover thumbnail */}
+                          <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 border border-white/10">
+                            {album.cover_image_url ? (
+                              <Image src={album.cover_image_url} alt="" width={48} height={48} className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full bg-primary-orange/10 flex items-center justify-center">
+                                <FolderOpen size={18} className="text-primary-orange" />
+                              </div>
+                            )}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className="font-semibold text-white text-sm">{album.title}</p>
+                              {album.is_featured && (
+                                <Star size={12} className="text-primary-orange" fill="currentColor" />
+                              )}
+                            </div>
+                            <p className="text-xs text-gray-600 mt-0.5">
+                              {album.year} &middot; {album.category} &middot; {albumPhotos.length} {albumPhotos.length === 1 ? 'photo' : 'photos'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2 flex-wrap">
+                          <button
+                            onClick={() => setSettingCoverId(isSettingCover ? null : album.id)}
+                            className="px-3 py-1.5 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 rounded-lg text-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-blue-500/20"
+                          >
+                            <ImageIcon size={12} /> Cover
+                          </button>
+                          <button
+                            onClick={() => setManagingAlbumId(isManaging ? null : album.id)}
+                            className="px-3 py-1.5 bg-green-500/10 text-green-400 hover:bg-green-500/20 rounded-lg text-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-green-500/20"
+                          >
+                            <Edit3 size={12} /> {isManaging ? 'Close' : 'Photos'}
+                          </button>
+                          <button
+                            onClick={async () => {
+                              if (!window.confirm(`Delete album "${album.title}"? Photos in this album will NOT be deleted.`)) return
+                              const { error } = await supabase.from('gallery_albums').delete().eq('id', album.id)
+                              if (!error) setAlbums(prev => prev.filter(a => a.id !== album.id))
+                              else alert('Failed to delete: ' + error.message)
+                            }}
+                            className="px-3 py-1.5 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg text-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-red-500/20"
+                          >
+                            <Trash2 size={12} /> Delete
+                          </button>
+                        </div>
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <p className="font-semibold text-white text-sm">{album.title}</p>
-                          {album.is_featured && (
-                            <Star size={12} className="text-primary-orange" fill="currentColor" />
+
+                      {/* Set cover photo panel */}
+                      {isSettingCover && (
+                        <div className="border-t border-white/5 p-4">
+                          <p className="text-sm text-gray-400 mb-3 font-medium">Select a cover photo from this album:</p>
+                          {albumPhotos.filter(p => p.media_type !== 'video').length === 0 ? (
+                            <p className="text-xs text-gray-600">No photos in this album yet. Add photos first, then set a cover.</p>
+                          ) : (
+                            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+                              {albumPhotos.filter(p => p.media_type !== 'video').map(photo => (
+                                <button
+                                  key={photo.id}
+                                  onClick={() => handleSetCoverPhoto(album.id, photo.image_url)}
+                                  className={`aspect-square rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                                    album.cover_image_url === photo.image_url
+                                      ? 'border-primary-orange shadow-lg shadow-primary-orange/20'
+                                      : 'border-white/10 hover:border-white/30'
+                                  }`}
+                                >
+                                  <Image src={photo.image_url} alt="" width={80} height={80} className="w-full h-full object-cover" />
+                                </button>
+                              ))}
+                            </div>
                           )}
                         </div>
-                        <p className="text-xs text-gray-600 mt-0.5">
-                          {album.year} &middot; {album.category}
-                        </p>
-                      </div>
+                      )}
+
+                      {/* Manage photos panel */}
+                      {isManaging && (
+                        <div className="border-t border-white/5 p-4">
+                          {/* Photos in this album */}
+                          {albumPhotos.length > 0 && (
+                            <div className="mb-4">
+                              <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">In this album ({albumPhotos.length})</p>
+                              <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+                                {albumPhotos.map(photo => (
+                                  <div key={photo.id} className="group relative aspect-square rounded-lg overflow-hidden border border-primary-orange/30 bg-black/20">
+                                    {photo.media_type === 'video' ? (
+                                      <div className="w-full h-full flex items-center justify-center bg-black/40 text-gray-500">
+                                        <Camera size={16} />
+                                      </div>
+                                    ) : (
+                                      <Image src={photo.image_url} alt="" width={80} height={80} className="w-full h-full object-cover" />
+                                    )}
+                                    <button
+                                      onClick={() => handleRemoveFromAlbum(photo.id)}
+                                      className="absolute inset-0 bg-red-500/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                      title="Remove from album"
+                                    >
+                                      <Trash2 size={14} className="text-white" />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Unassigned photos to add */}
+                          {unassignedPhotos.length > 0 && (
+                            <div>
+                              <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">
+                                Add photos ({unassignedPhotos.length} unassigned)
+                              </p>
+                              <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 max-h-[200px] overflow-y-auto">
+                                {unassignedPhotos.map(photo => (
+                                  <button
+                                    key={photo.id}
+                                    onClick={() => handleAssignToAlbum(photo.id, album.id)}
+                                    className="aspect-square rounded-lg overflow-hidden border border-white/10 hover:border-green-500/50 transition-all cursor-pointer group relative"
+                                    title="Add to this album"
+                                  >
+                                    {photo.media_type === 'video' ? (
+                                      <div className="w-full h-full flex items-center justify-center bg-black/40 text-gray-500">
+                                        <Camera size={16} />
+                                      </div>
+                                    ) : (
+                                      <Image src={photo.image_url} alt="" width={80} height={80} className="w-full h-full object-cover" />
+                                    )}
+                                    <div className="absolute inset-0 bg-green-500/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <Plus size={18} className="text-white" />
+                                    </div>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {unassignedPhotos.length === 0 && albumPhotos.length === 0 && (
+                            <p className="text-xs text-gray-600 text-center py-4">No approved photos available. Photos will appear here once approved.</p>
+                          )}
+                        </div>
+                      )}
                     </div>
-                    <button
-                      onClick={async () => {
-                        if (!window.confirm(`Delete album "${album.title}"? Photos in this album will NOT be deleted.`)) return
-                        const { error } = await supabase.from('gallery_albums').delete().eq('id', album.id)
-                        if (!error) setAlbums(prev => prev.filter(a => a.id !== album.id))
-                        else alert('Failed to delete: ' + error.message)
-                      }}
-                      className="px-3 py-1.5 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg text-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-red-500/20"
-                    >
-                      <Trash2 size={12} /> Delete
-                    </button>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )}
           </div>
