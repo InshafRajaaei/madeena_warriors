@@ -1,4 +1,5 @@
-import { GraduationCap, Heart, MapPin, Users, Calendar, Star, BookOpen, Trophy, CandlestickChart } from 'lucide-react'
+import { GraduationCap, Heart, MapPin, Users, Calendar, Star, BookOpen, Trophy, CandlestickChart, User } from 'lucide-react'
+import Image from 'next/image'
 
 export default function AboutPage() {
   return (
@@ -164,6 +165,32 @@ export default function AboutPage() {
                 Some warriors left us too soon, but their memory lives on through this batch forever. 
                 They walked these halls with us, shared the same classrooms, and remain a part of our story.
               </p>
+
+              {/* Memorial Photos */}
+              <div className="flex flex-wrap justify-center gap-6 mb-8">
+                {[
+                  { name: 'Mohamed Jarath', photo: '/memorial/Mohamed%20Jarath.jpg' },
+                  // Add more friends here: { name: 'Name', photo: '/memorial/name.jpg' },
+                ].map((friend, i) => (
+                  <div key={friend.name} className="flex flex-col items-center gap-2">
+                    <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-2 border-white/10 overflow-hidden bg-white/5 flex items-center justify-center relative">
+                      {friend.photo ? (
+                        <Image
+                          src={friend.photo}
+                          alt={friend.name}
+                          fill
+                          className="object-cover"
+                          sizes="96px"
+                        />
+                      ) : (
+                        <User size={32} className="text-white/20" />
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-400 font-medium">{friend.name}</p>
+                  </div>
+                ))}
+              </div>
+
               <p className="text-gray-500 text-sm italic">
                 &ldquo;Gone from our sight, but never from our hearts.&rdquo;
               </p>

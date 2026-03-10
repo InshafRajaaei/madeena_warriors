@@ -38,6 +38,11 @@ export const metadata: Metadata = {
     description:
       "First O/L Batch of KM Maruthamunai Al-Madeena Vidyalaya — reconnecting the 2018 batch worldwide.",
   },
+  icons: {
+    icon: "/icon-512.png",
+    apple: "/apple-icon.png",
+  },
+  manifest: "/manifest.json",
   verification: {
     google: "qJVUAKAogiFFGzU5c2VdPny7b0FncBk37ZlO3A6xcow",
   },

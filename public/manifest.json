@@ -1,0 +1,14 @@
+{
+  "name": "Madeena Warriors | Batch 2018",
+  "short_name": "Madeena Warriors",
+  "icons": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#0a0f1c",
+  "background_color": "#0a0f1c",
+  "display": "standalone"
+}

@@ -77,7 +77,7 @@ export default function DirectoryGrid({ profiles }: { profiles: Profile[] }) {
             <input
               type="text"
               placeholder="Search by name, profession, country..."
-              className="input-field !pl-11 pr-10"
+              className="input-field !pl-11 pr-10 w-full text-base min-h-[48px]"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -93,7 +93,7 @@ export default function DirectoryGrid({ profiles }: { profiles: Profile[] }) {
           
           {/* Country Filter */}
           <select
-            className="input-field md:w-56 appearance-none cursor-pointer bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg%20xmlns%3d%22http%3a%2f%2fwww.w3.org%2f2000%2fsvg%22%20width%3d%2224%22%20height%3d%2224%22%20viewBox%3d%220%200%2024%2024%22%20fill%3d%22none%22%20stroke%3d%22%236b7280%22%20stroke-width%3d%222%22%20stroke-linecap%3d%22round%22%20stroke-linejoin%3d%22round%22%3e%3cpolyline%20points%3d%226%209%2012%2015%2018%209%22%3e%3c%2fpolyline%3e%3c%2fsvg%3e')] bg-[position:right_12px_center] bg-no-repeat bg-[length:16px]"
+            className="md:w-64 w-full shrink-0 bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-orange focus:border-transparent transition-all appearance-none cursor-pointer bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg%20xmlns%3d%22http%3a%2f%2fwww.w3.org%2f2000%2fsvg%22%20width%3d%2224%22%20height%3d%2224%22%20viewBox%3d%220%200%2024%2024%22%20fill%3d%22none%22%20stroke%3d%22%236b7280%22%20stroke-width%3d%222%22%20stroke-linecap%3d%22round%22%20stroke-linejoin%3d%22round%22%3e%3cpolyline%20points%3d%226%209%2012%2015%2018%209%22%3e%3c%2fpolyline%3e%3c%2fsvg%3e')] bg-[position:right_12px_center] bg-no-repeat bg-[length:16px]"
             value={filterCountry}
             onChange={(e) => setFilterCountry(e.target.value)}
           >

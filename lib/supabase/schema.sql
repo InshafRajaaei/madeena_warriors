@@ -110,6 +110,7 @@ create table public.gallery_photos (
   image_url text not null,
   caption text,
   category text not null default 'General',
+  is_approved boolean default false not null,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
@@ -136,6 +137,12 @@ create policy "Users can delete own gallery photos."
 -- Admins can delete any photo
 create policy "Admins can delete any gallery photo."
   on public.gallery_photos for delete
+  to authenticated
+  using ( public.is_admin() );
+
+-- Admins can update any photo (for approval)
+create policy "Admins can update gallery photos."
+  on public.gallery_photos for update
   to authenticated
   using ( public.is_admin() );
 

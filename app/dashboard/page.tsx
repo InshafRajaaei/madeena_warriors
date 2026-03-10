@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import AvatarUpload from '@/components/profile/AvatarUpload'
 import { Eye, Save, Briefcase, GraduationCap, MapPin, Mail, Linkedin, Globe, Clock, AlertCircle, CheckCircle2, User, Shield } from 'lucide-react'
+import { COUNTRIES, SRI_LANKA_CITIES, INTERNATIONAL_CITIES } from '@/lib/locations'
 
 export default function DashboardPage() {
   const supabase = createClient()
@@ -256,15 +257,44 @@ export default function DashboardPage() {
                       <Globe size={14} className="inline mr-1.5 text-gray-500" />
                       Current Country
                     </label>
-                    <input id="currentCountry" type="text" className="input-field" value={currentCountry} onChange={(e) => setCurrentCountry(e.target.value)} placeholder="e.g. Sri Lanka, UAE, UK" />
+                    <select
+                      id="currentCountry"
+                      className="input-field appearance-none cursor-pointer"
+                      value={currentCountry}
+                      onChange={(e) => { setCurrentCountry(e.target.value); setCurrentCity(''); }}
+                    >
+                      <option value="">Select Country</option>
+                      {COUNTRIES.map(c => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="label-field" htmlFor="currentCity">
                       <MapPin size={14} className="inline mr-1.5 text-gray-500" />
                       Current City / District
                     </label>
-                    <input id="currentCity" type="text" className="input-field" value={currentCity} onChange={(e) => setCurrentCity(e.target.value)} placeholder="e.g. Colombo, Ampara, Dubai" />
-                    <p className="text-xs text-gray-600 mt-1.5">Required to appear on the Maps.</p>
+                    <select
+                      id="currentCity"
+                      className="input-field appearance-none cursor-pointer"
+                      value={currentCity}
+                      onChange={(e) => setCurrentCity(e.target.value)}
+                    >
+                      <option value="">Select City</option>
+                      {currentCountry === 'Sri Lanka'
+                        ? Object.entries(SRI_LANKA_CITIES).map(([district, cities]) => (
+                            <optgroup key={district} label={`${district} District`}>
+                              {cities.map(city => (
+                                <option key={city} value={city}>{city}</option>
+                              ))}
+                            </optgroup>
+                          ))
+                        : (INTERNATIONAL_CITIES[currentCountry] || []).map(city => (
+                            <option key={city} value={city}>{city}</option>
+                          ))
+                      }
+                    </select>
+                    <p className="text-xs text-gray-600 mt-1.5">Required to appear on the Maps. Select your country first.</p>
                   </div>
                 </div>
               </div>
