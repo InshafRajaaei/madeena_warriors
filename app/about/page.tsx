@@ -39,25 +39,46 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-gray-400 leading-relaxed">
                 <p>
-                  Al-Madeena Vidyalaya is located in Maruthamunai, Ampara District, Eastern Province 
-                  of Sri Lanka. The school has been a beacon of education in the local community, 
-                  nurturing generations of students with quality education and strong values.
+                  Al-Madeena Vidyalaya was born from resilience. After the devastating 2004 tsunami 
+                  destroyed the school that once stood by the beach in Maruthamunai, the land lay 
+                  abandoned with damaged buildings. In 2009, a group of visionaries — led by founding 
+                  principal <strong className="text-white">AR Nihmathulla</strong> — transformed that 
+                  very ground into a new school, giving the community a fresh start.
                 </p>
                 <p>
-                  Our batch entered the school with dreams and left with memories and skills that are 
-                  now scattered across the globe — from the streets of Colombo to cities across 
-                  the Middle East, Europe, and beyond.
+                  The school started with classes only up to Grade 4. Each year, one new grade was added — 
+                  Grade 5 in 2010, Grade 6 in 2011, and so on. It paused at Grade 9, and the two senior 
+                  batches had to leave as there were no O/L classes. But for our batch, Grade 10 was 
+                  introduced in 2017 and O/L in 2018 — making us the very first O/L batch in the 
+                  school&apos;s history. The school provides education up to Ordinary Level.
+                </p>
+                <p>
+                  We entered as Grade 2 students in 2009, the same year the school was founded. We 
+                  grew with the school, and the school grew with us.
                 </p>
               </div>
             </div>
-            <div className="card-static p-8 text-center">
-              <div className="w-24 h-24 rounded-full bg-primary-orange/10 border border-primary-orange/20 flex items-center justify-center mx-auto mb-6">
-                <GraduationCap size={40} className="text-primary-orange" />
+            <div className="card-static p-8 text-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-b from-primary-orange/5 via-transparent to-transparent pointer-events-none" />
+              <div className="relative z-10">
+                <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary-orange/10 overflow-hidden">
+                  <Image
+                    src="/school-logo.png"
+                    alt="Al-Madeena Vidyalaya Logo"
+                    width={160}
+                    height={160}
+                    className="object-contain p-2"
+                  />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Al-Madeena Vidyalaya</h3>
+                <p className="text-gray-500 text-sm flex items-center justify-center gap-2">
+                  <MapPin size={14} /> Maruthamunai, Ampara, Sri Lanka
+                </p>
+                <div className="mt-4 flex items-center justify-center gap-2">
+                  <GraduationCap size={14} className="text-primary-orange" />
+                  <span className="text-xs text-gray-500 uppercase tracking-widest font-semibold">Est. 2009 · Up to O/L</span>
+                </div>
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Al-Madeena Vidyalaya</h3>
-              <p className="text-gray-500 text-sm flex items-center justify-center gap-2">
-                <MapPin size={14} /> Maruthamunai, Ampara, Sri Lanka
-              </p>
             </div>
           </div>
         </div>
@@ -81,10 +102,11 @@ export default function AboutPage() {
             <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary-orange via-blue-500 to-purple-500 md:-translate-x-px" />
 
             {[
-              { year: '2009', title: 'The Beginning', description: 'We entered Al-Madeena Vidyalaya as young students, starting a journey that would shape our futures. Fresh faces, new friendships, and endless possibilities.', icon: Star, color: 'orange' },
-              { year: '2018', title: 'O/L Examination', description: 'The defining moment — our batch sat for the O/L examination together. Years of hard work culminated in this milestone that marked the transition from school to the wider world.', icon: Trophy, color: 'blue' },
-              { year: '2019', title: 'Paths Diverge', description: 'Some continued to A/Levels, others pursued vocational training, and many began their professional journeys. The batch scattered but the bond stayed strong.', icon: Users, color: 'purple' },
-              { year: 'Today', title: 'Warriors Worldwide', description: 'From local businesses to international careers, the Madeena Warriors are making their mark across the globe. This platform reconnects us and celebrates every journey.', icon: Heart, color: 'red' }
+              { year: '2009', title: 'School Founded — We Joined', description: 'Al-Madeena Vidyalaya was founded by Principal AR Nihmathulla on land left abandoned after the 2004 tsunami. We joined as Grade 2 students — the school started with classes only up to Grade 4.', icon: Star, color: 'orange' },
+              { year: '2010–16', title: 'Growing Together', description: 'Each year, a new grade was added. Grade 5 in 2010, Grade 6 in 2011, and so on. The school and our batch grew side by side. Two senior batches had to leave when it stopped at Grade 9.', icon: GraduationCap, color: 'blue' },
+              { year: '2017–18', title: 'First O/L Batch', description: 'Grade 10 was introduced in 2017 and the O/L examination in 2018. We became the very first batch to sit for O/Ls at Al-Madeena Vidyalaya — a historic milestone for the school and for us.', icon: Trophy, color: 'purple' },
+              { year: '2019', title: 'Results & Loss', description: 'Our O/L results came in and paths diverged. Tragically, our beloved founding principal AR Nihmathulla sir passed away the same year. The man who built the school and knew each of us personally was gone.', icon: Heart, color: 'red' },
+              { year: 'Today', title: 'Warriors Worldwide', description: 'From local businesses to international careers across the Middle East, Europe, and beyond — the Madeena Warriors carry the legacy of their school and principal wherever they go.', icon: Users, color: 'orange' }
             ].map((item, i) => (
               <div key={item.year} className={`relative flex items-start gap-6 mb-12 last:mb-0 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} md:gap-0`}>
                 {/* Content */}
@@ -109,6 +131,71 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Tribute to Principal */}
+      <section className="pb-24 relative z-10">
+        <div className="container-app">
+          <div className="max-w-3xl mx-auto relative">
+            <div className="card-static p-8 md:p-12 relative overflow-hidden border-white/10">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-orange via-gold to-primary-orange" />
+              <div className="absolute inset-0 bg-gradient-to-b from-primary-orange/3 via-transparent to-transparent pointer-events-none" />
+              
+              <div className="relative z-10">
+                <div className="text-center mb-8">
+                  <p className="text-xs uppercase tracking-[0.3em] text-primary-orange font-semibold mb-3">Tribute</p>
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-2">
+                    The Man Who <span className="text-gradient">Built Our School</span>
+                  </h2>
+                  <div className="divider-line mb-4" />
+                </div>
+
+                <div className="flex flex-col md:flex-row items-center gap-8">
+                  <div className="flex-shrink-0">
+                    <div className="w-36 h-36 md:w-44 md:h-44 rounded-2xl border-2 border-primary-orange/20 overflow-hidden shadow-lg shadow-primary-orange/10 relative">
+                      <Image
+                        src="/memorial/AR-Nihmathulla.png"
+                        alt="Principal AR Nihmathulla"
+                        fill
+                        className="object-cover"
+                        sizes="176px"
+                      />
+                    </div>
+                    <div className="text-center mt-4">
+                      <h3 className="text-lg font-bold text-white">AR Nihmathulla</h3>
+                      <p className="text-primary-orange text-sm font-semibold">Founding Principal</p>
+                      <p className="text-gray-600 text-xs mt-1">2009 — 2019</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 text-gray-400 leading-relaxed text-sm md:text-base">
+                    <p>
+                      After the 2004 tsunami destroyed the school near the beach, the land in Maruthamunai 
+                      lay abandoned with damaged buildings. While others saw ruins, <strong className="text-white">AR Nihmathulla sir</strong> saw 
+                      a future. In 2009, he founded Al-Madeena Vidyalaya on that very ground — giving the 
+                      community&apos;s children a place to learn and dream again.
+                    </p>
+                    <p>
+                      He wasn&apos;t just a principal — he was a father figure to every student. He knew 
+                      each of our families, our struggles, our strengths. He guided us not just in 
+                      academics but in life. He stayed until we, his first O/L batch, wrote our exams 
+                      in 2018.
+                    </p>
+                    <p>
+                      In 2019, the year our results came, sir was no longer the principal. He fell ill 
+                      and passed away that same year. The school he built, the students he raised, and 
+                      the legacy he left behind — that is what the Madeena Warriors carry forward.
+                    </p>
+                    <p className="text-gray-500 italic border-l-2 border-primary-orange/30 pl-4">
+                      &ldquo;He gave us a school when we had none. He gave us belief when we had doubt. 
+                      We are his legacy.&rdquo;
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Why "Warriors" */}
       <section className="pb-24 relative z-10">
         <div className="container-app">
@@ -125,19 +212,21 @@ export default function AboutPage() {
               among ourselves, but about each member&apos;s personal battle to succeed and uplift 
               those around them.
             </p>
-            <div className="flex items-center justify-center gap-8 mt-8">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mt-8">
               <div className="text-center">
-                <div className="text-2xl font-black text-gradient">Unity</div>
+                <div className="text-xl sm:text-2xl font-black text-gradient">Unity</div>
                 <p className="text-xs text-gray-600 mt-1">Our Foundation</p>
               </div>
-              <div className="w-px h-10 bg-white/10" />
+              <div className="hidden sm:block w-px h-10 bg-white/10" />
+              <div className="sm:hidden w-16 h-px bg-white/10" />
               <div className="text-center">
-                <div className="text-2xl font-black text-gradient-blue">Resilience</div>
+                <div className="text-xl sm:text-2xl font-black text-gradient-blue">Resilience</div>
                 <p className="text-xs text-gray-600 mt-1">Our Strength</p>
               </div>
-              <div className="w-px h-10 bg-white/10" />
+              <div className="hidden sm:block w-px h-10 bg-white/10" />
+              <div className="sm:hidden w-16 h-px bg-white/10" />
               <div className="text-center">
-                <div className="text-2xl font-black text-gradient">Growth</div>
+                <div className="text-xl sm:text-2xl font-black text-gradient">Growth</div>
                 <p className="text-xs text-gray-600 mt-1">Our Goal</p>
               </div>
             </div>

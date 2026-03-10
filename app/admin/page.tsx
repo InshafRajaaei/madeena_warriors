@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Check, Trash2, ShieldAlert, Clock, UserCheck, Users, Camera, ImageIcon } from 'lucide-react'
+import { Check, Trash2, ShieldAlert, Clock, UserCheck, Users, Camera, ImageIcon, FolderOpen, Plus, Star } from 'lucide-react'
 import Image from 'next/image'
 
 export default function AdminPage() {
@@ -15,6 +15,14 @@ export default function AdminPage() {
   const [pendingProfiles, setPendingProfiles] = useState<any[]>([])
   const [approvedCount, setApprovedCount] = useState(0)
   const [pendingPhotos, setPendingPhotos] = useState<any[]>([])
+  const [albums, setAlbums] = useState<any[]>([])
+  const [showCreateAlbum, setShowCreateAlbum] = useState(false)
+  const [albumTitle, setAlbumTitle] = useState('')
+  const [albumDescription, setAlbumDescription] = useState('')
+  const [albumYear, setAlbumYear] = useState(2018)
+  const [albumCategory, setAlbumCategory] = useState('General')
+  const [albumFeatured, setAlbumFeatured] = useState(false)
+  const [creatingAlbum, setCreatingAlbum] = useState(false)
 
   useEffect(() => {
     async function checkAdminAndLoad() {
@@ -61,6 +69,14 @@ export default function AdminPage() {
         .order('created_at', { ascending: false })
       
       if (pendingGallery) setPendingPhotos(pendingGallery)
+
+      // Fetch albums
+      const { data: albumsData } = await supabase
+        .from('gallery_albums')
+        .select('*')
+        .order('year', { ascending: false })
+      
+      if (albumsData) setAlbums(albumsData)
       
       setLoading(false)
     }
@@ -308,6 +324,179 @@ export default function AdminPage() {
                         </button>
                       </div>
                     </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+      {/* Album Management */}
+      <section className="pb-20 relative z-10">
+        <div className="container-app">
+          <div className="card-static p-6 md:p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                <FolderOpen size={18} className="text-primary-orange" />
+                Album Management
+                {albums.length > 0 && (
+                  <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-primary-orange/20 text-primary-orange rounded-full border border-primary-orange/20">
+                    {albums.length}
+                  </span>
+                )}
+              </h2>
+              <button
+                onClick={() => setShowCreateAlbum(!showCreateAlbum)}
+                className="flex items-center gap-1.5 px-4 py-2 bg-primary-orange/10 text-primary-orange hover:bg-primary-orange/20 rounded-lg font-medium text-sm transition-colors cursor-pointer border border-primary-orange/20"
+              >
+                <Plus size={14} /> New Album
+              </button>
+            </div>
+
+            {/* Create Album Form */}
+            {showCreateAlbum && (
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5 mb-6">
+                <h3 className="text-sm font-bold text-white mb-4">Create New Album</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-400 mb-1">Title</label>
+                    <input
+                      type="text"
+                      value={albumTitle}
+                      onChange={e => setAlbumTitle(e.target.value)}
+                      placeholder="e.g. 2016 Kandy Trip"
+                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-gray-600 outline-none focus:border-primary-orange/50 transition-colors"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-400 mb-1">Year</label>
+                      <select
+                        value={albumYear}
+                        onChange={e => setAlbumYear(Number(e.target.value))}
+                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm outline-none focus:border-primary-orange/50 transition-colors cursor-pointer appearance-none"
+                      >
+                        {[2009,2010,2011,2012,2013,2014,2015,2016,2017,2018].map(y => (
+                          <option key={y} value={y} className="bg-[#0c1230]">{y}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-400 mb-1">Category</label>
+                      <select
+                        value={albumCategory}
+                        onChange={e => setAlbumCategory(e.target.value)}
+                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm outline-none focus:border-primary-orange/50 transition-colors cursor-pointer appearance-none"
+                      >
+                        {['School Days', 'Sports & Events', 'Farewell 2018', 'Reunions', 'Achievements', 'Campus Life', 'General'].map(cat => (
+                          <option key={cat} value={cat} className="bg-[#0c1230]">{cat}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-xs font-medium text-gray-400 mb-1">Description (optional)</label>
+                  <textarea
+                    value={albumDescription}
+                    onChange={e => setAlbumDescription(e.target.value)}
+                    placeholder="Describe this memory album..."
+                    rows={2}
+                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-gray-600 outline-none focus:border-primary-orange/50 transition-colors resize-none"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={albumFeatured}
+                      onChange={e => setAlbumFeatured(e.target.checked)}
+                      className="rounded border-white/20 bg-white/5 text-primary-orange focus:ring-primary-orange cursor-pointer"
+                    />
+                    <Star size={14} className="text-primary-orange" /> Featured memory
+                  </label>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setShowCreateAlbum(false)}
+                      className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      disabled={!albumTitle.trim() || creatingAlbum}
+                      onClick={async () => {
+                        setCreatingAlbum(true)
+                        const { data, error } = await supabase
+                          .from('gallery_albums')
+                          .insert({
+                            title: albumTitle.trim(),
+                            description: albumDescription.trim() || null,
+                            year: albumYear,
+                            category: albumCategory,
+                            is_featured: albumFeatured,
+                          })
+                          .select()
+                          .single()
+                        if (error) {
+                          alert('Failed to create album: ' + error.message)
+                        } else if (data) {
+                          setAlbums(prev => [data, ...prev])
+                          setAlbumTitle('')
+                          setAlbumDescription('')
+                          setAlbumYear(2018)
+                          setAlbumCategory('General')
+                          setAlbumFeatured(false)
+                          setShowCreateAlbum(false)
+                        }
+                        setCreatingAlbum(false)
+                      }}
+                      className="px-4 py-2 bg-primary-orange/20 text-primary-orange hover:bg-primary-orange/30 rounded-lg font-medium text-sm transition-colors cursor-pointer border border-primary-orange/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      {creatingAlbum ? 'Creating...' : 'Create Album'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Albums list */}
+            {albums.length === 0 ? (
+              <div className="text-center py-16 rounded-xl border border-dashed border-white/10 bg-white/[0.02]">
+                <FolderOpen size={40} className="mx-auto text-primary-orange/30 mb-4" />
+                <p className="text-gray-500 font-medium">No albums created yet.</p>
+                <p className="text-gray-600 text-sm mt-1">Create albums to organize gallery photos into memory collections.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {albums.map(album => (
+                  <div key={album.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/5 hover:border-white/10 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-primary-orange/10 flex items-center justify-center shrink-0">
+                        <FolderOpen size={18} className="text-primary-orange" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="font-semibold text-white text-sm">{album.title}</p>
+                          {album.is_featured && (
+                            <Star size={12} className="text-primary-orange" fill="currentColor" />
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-600 mt-0.5">
+                          {album.year} &middot; {album.category}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        if (!window.confirm(`Delete album "${album.title}"? Photos in this album will NOT be deleted.`)) return
+                        const { error } = await supabase.from('gallery_albums').delete().eq('id', album.id)
+                        if (!error) setAlbums(prev => prev.filter(a => a.id !== album.id))
+                        else alert('Failed to delete: ' + error.message)
+                      }}
+                      className="px-3 py-1.5 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg text-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-red-500/20"
+                    >
+                      <Trash2 size={12} /> Delete
+                    </button>
                   </div>
                 ))}
               </div>
