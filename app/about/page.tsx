@@ -46,7 +46,7 @@ export default function AboutPage() {
                   very ground into a new school, giving the community a fresh start.
                 </p>
                 <p>
-                  The school started with classes only up to Grade 4. Each year, one new grade was added — 
+                  The school started with classes only up to <span className="whitespace-nowrap">Grade 4.</span> Each year, one new grade was added — 
                   Grade 5 in 2010, Grade 6 in 2011, and so on. It paused at Grade 9, and the two senior 
                   batches had to leave as there were no O/L classes. But for our batch, Grade 10 was 
                   introduced in 2017 and O/L in 2018 — making us the very first O/L batch in the 
@@ -102,7 +102,7 @@ export default function AboutPage() {
             <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary-orange via-blue-500 to-purple-500 md:-translate-x-px" />
 
             {[
-              { year: '2009', title: 'School Founded — We Joined', description: 'Al-Madeena Vidyalaya was founded by Principal AR Nihmathulla on land left abandoned after the 2004 tsunami. We joined as Grade 2 students — the school started with classes only up to Grade 4.', icon: Star, color: 'orange' },
+              { year: '2009', title: 'School Founded — We Joined', description: 'Al-Madeena Vidyalaya was founded by Principal AR Nihmathulla on land left abandoned after the 2004 tsunami. We joined as Grade 2 students — the school started with classes only up to Grade\u00A04.', icon: Star, color: 'orange' },
               { year: '2010–16', title: 'Growing Together', description: 'Each year, a new grade was added. Grade 5 in 2010, Grade 6 in 2011, and so on. The school and our batch grew side by side. Two senior batches had to leave when it stopped at Grade 9.', icon: GraduationCap, color: 'blue' },
               { year: '2017–18', title: 'First O/L Batch', description: 'Grade 10 was introduced in 2017 and the O/L examination in 2018. We became the very first batch to sit for O/Ls at Al-Madeena Vidyalaya — a historic milestone for the school and for us.', icon: Trophy, color: 'purple' },
               { year: '2019', title: 'Results & Loss', description: 'Our O/L results came in and paths diverged. Tragically, our beloved founding principal AR Nihmathulla sir passed away the same year. The man who built the school and knew each of us personally was gone.', icon: Heart, color: 'red' },

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import AvatarUpload from '@/components/profile/AvatarUpload'
-import { Eye, Save, Briefcase, GraduationCap, MapPin, Mail, Linkedin, Globe, Clock, AlertCircle, CheckCircle2, User, Shield } from 'lucide-react'
+import { Eye, Save, Briefcase, GraduationCap, MapPin, Mail, Linkedin, Globe, Clock, AlertCircle, CheckCircle2, User, Shield, Facebook, Instagram } from 'lucide-react'
 import { COUNTRIES, SRI_LANKA_CITIES, INTERNATIONAL_CITIES } from '@/lib/locations'
 
 export default function DashboardPage() {
@@ -26,9 +26,10 @@ export default function DashboardPage() {
   const [education, setEducation] = useState('')
   const [currentCountry, setCurrentCountry] = useState('')
   const [currentCity, setCurrentCity] = useState('')
-  const [emailLink, setEmailLink] = useState('')
+  const [facebookLink, setFacebookLink] = useState('')
+  const [instagramLink, setInstagramLink] = useState('')
   const [linkedinLink, setLinkedinLink] = useState('')
-  const [websiteLink, setWebsiteLink] = useState('')
+  const [emailLink, setEmailLink] = useState('')
   const [hideLocation, setHideLocation] = useState(false)
   const [hideContact, setHideContact] = useState(false)
   const [hideEducation, setHideEducation] = useState(false)
@@ -57,9 +58,10 @@ export default function DashboardPage() {
         setEducation(data.education || '')
         setCurrentCountry(data.current_country || '')
         setCurrentCity(data.current_city || '')
-        setEmailLink(data.contact_links?.email || '')
+        setFacebookLink(data.contact_links?.facebook || '')
+        setInstagramLink(data.contact_links?.instagram || '')
         setLinkedinLink(data.contact_links?.linkedin || '')
-        setWebsiteLink(data.contact_links?.website || '')
+        setEmailLink(data.contact_links?.email || '')
         setHideLocation(data.privacy?.hide_location || false)
         setHideContact(data.privacy?.hide_contact || false)
         setHideEducation(data.privacy?.hide_education || false)
@@ -91,9 +93,10 @@ export default function DashboardPage() {
       current_country: currentCountry,
       current_city: currentCity,
       contact_links: {
-        email: emailLink,
+        facebook: facebookLink,
+        instagram: instagramLink,
         linkedin: linkedinLink,
-        website: websiteLink
+        email: emailLink
       },
       privacy: {
         hide_location: hideLocation,
@@ -161,7 +164,7 @@ export default function DashboardPage() {
 
       {/* Profile Completeness */}
       {(() => {
-        const fields = [avatarUrl, jobTitle, education, currentCountry, currentCity, emailLink || linkedinLink || websiteLink]
+        const fields = [avatarUrl, jobTitle, education, currentCountry, currentCity, facebookLink || instagramLink || linkedinLink || emailLink]
         const filled = fields.filter(Boolean).length
         const percent = Math.round((filled / fields.length) * 100)
         return (
@@ -178,7 +181,7 @@ export default function DashboardPage() {
             </div>
             {percent < 100 && (
               <p className="text-xs text-gray-600 mt-2">
-                Complete your {!avatarUrl ? 'photo, ' : ''}{!jobTitle ? 'job title, ' : ''}{!education ? 'education, ' : ''}{!currentCountry ? 'country, ' : ''}{!currentCity ? 'city, ' : ''}{!(emailLink || linkedinLink || websiteLink) ? 'contact links' : ''}
+                Complete your {!avatarUrl ? 'photo, ' : ''}{!jobTitle ? 'job title, ' : ''}{!education ? 'education, ' : ''}{!currentCountry ? 'country, ' : ''}{!currentCity ? 'city, ' : ''}{!(facebookLink || instagramLink || linkedinLink || emailLink) ? 'contact links' : ''}
               </p>
             )}
           </div>
@@ -304,32 +307,44 @@ export default function DashboardPage() {
             <div className="border-t border-white/10 pt-8">
               <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
                 <span className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                  <Mail size={16} className="text-blue-400" />
+                  <Globe size={16} className="text-blue-400" />
                 </span>
-                Contact Links
+                Social & Contact Links
               </h3>
-              <p className="text-sm text-gray-500 mb-5">Optional — let classmates connect with you professionally.</p>
+              <p className="text-sm text-gray-500 mb-5">Optional — let classmates connect with you on social media.</p>
               <div className="space-y-5">
                 <div>
-                  <label className="label-field" htmlFor="emailLink">
-                    <Mail size={14} className="inline mr-1.5 text-gray-500" />
-                    Public Contact Email
+                  <label className="label-field" htmlFor="facebookLink">
+                    <Facebook size={14} className="inline mr-1.5 text-gray-500" />
+                    Facebook Profile
                   </label>
-                  <input id="emailLink" type="email" className="input-field" value={emailLink} onChange={(e) => setEmailLink(e.target.value)} placeholder="hello@example.com" />
+                  <input id="facebookLink" type="url" className="input-field" value={facebookLink} onChange={(e) => setFacebookLink(e.target.value)} placeholder="https://facebook.com/username" />
                 </div>
                 <div>
-                  <label className="label-field" htmlFor="linkedinLink">
-                    <Linkedin size={14} className="inline mr-1.5 text-gray-500" />
-                    LinkedIn URL
+                  <label className="label-field" htmlFor="instagramLink">
+                    <Instagram size={14} className="inline mr-1.5 text-gray-500" />
+                    Instagram Handle
                   </label>
-                  <input id="linkedinLink" type="url" className="input-field" value={linkedinLink} onChange={(e) => setLinkedinLink(e.target.value)} placeholder="https://linkedin.com/in/username" />
+                  <input id="instagramLink" type="url" className="input-field" value={instagramLink} onChange={(e) => setInstagramLink(e.target.value)} placeholder="https://instagram.com/username" />
                 </div>
-                <div>
-                  <label className="label-field" htmlFor="websiteLink">
-                    <Globe size={14} className="inline mr-1.5 text-gray-500" />
-                    Personal Website
-                  </label>
-                  <input id="websiteLink" type="url" className="input-field" value={websiteLink} onChange={(e) => setWebsiteLink(e.target.value)} placeholder="https://yourwebsite.com" />
+                <div className="pt-3 border-t border-white/5">
+                  <p className="text-xs text-gray-600 mb-4">Professional links (optional)</p>
+                  <div className="space-y-5">
+                    <div>
+                      <label className="label-field" htmlFor="linkedinLink">
+                        <Linkedin size={14} className="inline mr-1.5 text-gray-500" />
+                        LinkedIn URL
+                      </label>
+                      <input id="linkedinLink" type="url" className="input-field" value={linkedinLink} onChange={(e) => setLinkedinLink(e.target.value)} placeholder="https://linkedin.com/in/username" />
+                    </div>
+                    <div>
+                      <label className="label-field" htmlFor="emailLink">
+                        <Mail size={14} className="inline mr-1.5 text-gray-500" />
+                        Public Contact Email
+                      </label>
+                      <input id="emailLink" type="email" className="input-field" value={emailLink} onChange={(e) => setEmailLink(e.target.value)} placeholder="hello@example.com" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -359,7 +374,7 @@ export default function DashboardPage() {
                     <Mail size={16} className="text-blue-400" />
                     <div>
                       <span className="text-sm font-medium text-white">Hide Contact Links</span>
-                      <p className="text-xs text-gray-600">Email, LinkedIn, and website won&apos;t be shown</p>
+                      <p className="text-xs text-gray-600">All social and contact links won&apos;t be shown</p>
                     </div>
                   </div>
                   <input type="checkbox" checked={hideContact} onChange={(e) => setHideContact(e.target.checked)} className="w-5 h-5 rounded accent-primary-orange cursor-pointer" />

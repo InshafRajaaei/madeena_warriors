@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
-import { MapPin, Briefcase, GraduationCap, LinkIcon, Mail, ArrowLeft, Edit3, Clock, Globe } from 'lucide-react'
+import { MapPin, Briefcase, GraduationCap, LinkIcon, Mail, ArrowLeft, Edit3, Clock, Globe, Facebook, Instagram } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -46,7 +46,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
     )
   }
 
-  const hasContactLinks = showContact && (profile.contact_links?.email || profile.contact_links?.linkedin || profile.contact_links?.website)
+  const hasContactLinks = showContact && (profile.contact_links?.facebook || profile.contact_links?.instagram || profile.contact_links?.linkedin || profile.contact_links?.email)
 
   return (
     <div className="container-app py-10 md:py-16">
@@ -157,31 +157,39 @@ export default async function ProfilePage({ params }: { params: { id: string } }
                   <div className="bg-white/[0.03] rounded-2xl p-6 border border-white/10">
                     <h3 className="font-bold text-white mb-5 text-sm uppercase tracking-widest flex items-center gap-2">
                       <Globe size={14} className="text-primary-orange" />
-                      Contact & Links
+                      Connect
                     </h3>
                     <div className="space-y-3">
+                      {profile.contact_links?.facebook && (
+                        <a href={profile.contact_links.facebook} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-[#1877f2] transition-colors duration-200 text-sm font-medium group">
+                          <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-[#1877f2]/10 transition-colors">
+                            <Facebook size={14} />
+                          </div>
+                          Facebook
+                        </a>
+                      )}
+                      {profile.contact_links?.instagram && (
+                        <a href={profile.contact_links.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-[#e4405f] transition-colors duration-200 text-sm font-medium group">
+                          <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-[#e4405f]/10 transition-colors">
+                            <Instagram size={14} />
+                          </div>
+                          Instagram
+                        </a>
+                      )}
+                      {profile.contact_links?.linkedin && (
+                        <a href={profile.contact_links.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-[#0a66c2] transition-colors duration-200 text-sm font-medium group">
+                          <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-[#0a66c2]/10 transition-colors">
+                            <LinkIcon size={14} />
+                          </div>
+                          LinkedIn
+                        </a>
+                      )}
                       {profile.contact_links?.email && (
                         <a href={`mailto:${profile.contact_links.email}`} className="flex items-center gap-3 text-gray-400 hover:text-primary-orange transition-colors duration-200 text-sm font-medium group">
                           <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-primary-orange/10 transition-colors">
                             <Mail size={14} />
                           </div>
-                          Email Address
-                        </a>
-                      )}
-                      {profile.contact_links?.linkedin && (
-                        <a href={profile.contact_links.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-blue-400 transition-colors duration-200 text-sm font-medium group">
-                          <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-blue-500/10 transition-colors">
-                            <LinkIcon size={14} />
-                          </div>
-                          LinkedIn Profile
-                        </a>
-                      )}
-                      {profile.contact_links?.website && (
-                        <a href={profile.contact_links.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-green-400 transition-colors duration-200 text-sm font-medium group">
-                          <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-green-500/10 transition-colors">
-                            <Globe size={14} />
-                          </div>
-                          Personal Website
+                          Email
                         </a>
                       )}
                     </div>
